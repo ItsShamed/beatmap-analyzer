@@ -31,29 +31,29 @@ public class BeatmapParser {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T extends Beatmap> T parse(File file, Class<T> klass) throws BeatmapException, IOException {
+	public <T extends Beatmap> T parse(File file, Class<T> klass) throws BeatmapException, FileNotFoundException {
 		return (T) parse(file);
 	}
 	
-	public Beatmap parse(File file) throws IOException, BeatmapException {
+	public Beatmap parse(File file) throws BeatmapException, FileNotFoundException {
 		return parse(new FileInputStream(file));
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T extends Beatmap> T parse(String string, Class<T> klass) throws BeatmapException, IOException {
+	public <T extends Beatmap> T parse(String string, Class<T> klass) throws BeatmapException{
 		return (T) parse(string);
 	}
 	
-	public Beatmap parse(String string) throws BeatmapException, IOException {
+	public Beatmap parse(String string) throws BeatmapException{
 		return parse(new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8)));
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T extends Beatmap> T parse(InputStream stream, Class<T> klass) throws BeatmapException, IOException {
+	public <T extends Beatmap> T parse(InputStream stream, Class<T> klass) throws BeatmapException{
 		return (T) parse(stream);
 	}
 	
-	public Beatmap parse(InputStream stream) throws BeatmapException, IOException {
+	public Beatmap parse(InputStream stream) throws BeatmapException{
 		try (Scanner scanner = new Scanner(stream)){
 			Map<String, FilePart> parts = new HashMap<>();
 			
@@ -97,6 +97,8 @@ public class BeatmapParser {
 			stream.close();
 			return parser.buildBeatmap(generalSettings, editorState, metadata, difficulties, breaks, timingPoints, rawObjects);
 
+		} catch (IOException e){
+			throw new BeatmapException("Could not close InputStream");
 		}
 	}
 	
