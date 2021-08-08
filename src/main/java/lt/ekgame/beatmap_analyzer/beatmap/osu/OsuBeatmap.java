@@ -69,7 +69,7 @@ public class OsuBeatmap extends Beatmap {
 	public Gamemode getGamemode() {
 		return Gamemode.OSU;
 	}
-	
+
 	@Override
 	public int getMaxCombo() {
 		return hitObjects.stream().mapToInt(o->o.getCombo()).sum();
@@ -78,12 +78,12 @@ public class OsuBeatmap extends Beatmap {
 	public List<OsuObject> getHitObjects() {
 		return hitObjects;
 	}
-	
+
 	@Override
 	public int getObjectCount() {
 		return hitObjects.size();
 	}
-	
+
 	@Override
 	public OsuDifficultyCalculator getDifficultyCalculator() {
 		return new OsuDifficultyCalculator();

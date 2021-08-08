@@ -1,10 +1,6 @@
 package lt.ekgame.beatmap_analyzer.parser;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,29 +31,29 @@ public class BeatmapParser {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T extends Beatmap> T parse(File file, Class<T> klass) throws BeatmapException, FileNotFoundException {
+	public <T extends Beatmap> T parse(File file, Class<T> klass) throws BeatmapException, IOException {
 		return (T) parse(file);
 	}
 	
-	public Beatmap parse(File file) throws FileNotFoundException, BeatmapException {
+	public Beatmap parse(File file) throws IOException, BeatmapException {
 		return parse(new FileInputStream(file));
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T extends Beatmap> T parse(String string, Class<T> klass) throws BeatmapException {
+	public <T extends Beatmap> T parse(String string, Class<T> klass) throws BeatmapException, IOException {
 		return (T) parse(string);
 	}
 	
-	public Beatmap parse(String string) throws BeatmapException {
+	public Beatmap parse(String string) throws BeatmapException, IOException {
 		return parse(new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8)));
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T extends Beatmap> T parse(InputStream stream, Class<T> klass) throws BeatmapException {
+	public <T extends Beatmap> T parse(InputStream stream, Class<T> klass) throws BeatmapException, IOException {
 		return (T) parse(stream);
 	}
 	
-	public Beatmap parse(InputStream stream) throws BeatmapException {
+	public Beatmap parse(InputStream stream) throws BeatmapException, IOException {
 		try (Scanner scanner = new Scanner(stream)){
 			Map<String, FilePart> parts = new HashMap<>();
 			
@@ -98,8 +94,9 @@ public class BeatmapParser {
 			List<BreakPeriod> breaks = parseBreaks(parts.get("Events"));
 			List<TimingPoint> timingPoints = parseTimePoints(parts.get("TimingPoints"));
 			List<String> rawObjects = parts.get("HitObjects").getLines();
-			
+			stream.close();
 			return parser.buildBeatmap(generalSettings, editorState, metadata, difficulties, breaks, timingPoints, rawObjects);
+
 		}
 	}
 	
